@@ -4,6 +4,7 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    Content: typeof import('./src/components/content.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']
@@ -19,6 +20,7 @@ declare module 'vue' {
     Loading: typeof import('element-plus/es')['ElLoadingDirective']
     Login: typeof import('./src/components/login.vue')['default']
     Sider: typeof import('./src/components/sider.vue')['default']
+    'Sider copy': typeof import('./src/components/sider copy.vue')['default']
   }
 }
 

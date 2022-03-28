@@ -68,6 +68,7 @@ export default {
           return;
         }
         window.top.location.href = 'http://web.wakedata.com:4000/login.html';
+        // window.top.location.href = 'http://localhost:4000/login.html';
         this.loading = false;
       });
     },

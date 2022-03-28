@@ -5,7 +5,7 @@
         <el-row class="menu-cent">
           <el-col :span="4">
             <el-menu
-              :default-active="path"
+              :default-active="defaultActive"
               class="el-menu-vertical-demo"
               :unique-opened="true"
               @open="handleOpen"
@@ -36,7 +36,7 @@
           </el-col>
         </el-row>
         <div class="content">
-          <el-tabs class="viewsActiveName" v-model="viewsActiveName">
+          <!-- <el-tabs class="viewsActiveName" v-model="viewsActiveName">
             <el-tab-pane
               v-for="viewTable in viewTableList"
               :key="viewTable.id"
@@ -44,8 +44,9 @@
               :name="viewTable.url"
             >
             </el-tab-pane>
-          </el-tabs>
+          </el-tabs> -->
 
+          <h1>1222222</h1>
           <router-view />
         </div>
       </el-tab-pane>
@@ -57,7 +58,6 @@
 import api from '@/api/index';
 import type { TabsPaneContext } from 'element-plus';
 import { Location, Document, Menu as IconMenu, Setting } from '@element-plus/icons-vue';
-import { useUserStore } from '@/store/routerMenu';
 export default {
   data() {
     return {
@@ -69,34 +69,8 @@ export default {
   },
   components: { Location, Document, IconMenu, Setting },
   computed: {
-    userStore() {
-      return useUserStore().name;
-    },
-    path() {
-      // let router = this.$router.currentRoute.value;
-      let path = this.$route.path;
-      // console.log(this.$router.currentRoute.value);
-      // if (router.matched && router.matched.length) {
-      //   if (!!router.matched[0] && !!router.matched[0].path) {
-      //     path = router.matched[0].path;
-      //   } else if (!!router.matched[1] && !!router.matched[1].path) {
-      //     path = router.matched[1].path;
-      //   }
-      // }
-
-      // let router = this.$router.currentRoute.value;
-
-      // const list = router.matched;
-
-      // for (let i = list.length - 1; i >= 0; i--) {
-      //   if (this.routeLeafs && this.routeLeafs.has(list[i].path)) {
-      //     return list[i].path;
-      //   }
-      // }
-
-      // return list[0].path;
-
-      return path;
+    defaultActive() {
+      return '/retail/goods-mgr/product'; //商品列表
     },
   },
   created() {
@@ -120,7 +94,7 @@ export default {
   methods: {
     //选中菜单
     handleMenuTtem(childSecd: any) {
-      console.log(childSecd.url);
+      console.log(childSecd);
       this.viewTableList = childSecd.childMenu;
       this.$router.push(childSecd.url);
     },
@@ -149,6 +123,8 @@ export default {
   user-select: none;
 }
 :deep(.el-tabs__nav-scroll) {
+  position: fixed;
+  top: 10px;
   background-color: darkgray;
   width: 100%;
   padding-left: 200px;
@@ -191,5 +167,9 @@ export default {
   background-color: bisque;
   height: 800px;
   margin-left: 200px;
+}
+.viewsActiveName {
+  background-color: #dba81b;
+  height: 100px;
 }
 </style>

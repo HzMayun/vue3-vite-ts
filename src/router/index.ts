@@ -1,23 +1,27 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-import Goods from '@/views/goods/goods-list.vue';
-// import Goods from '@/views/goods/goods-list.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/retail/goods-list',
+    //二级路由：商品管理
+    path: '/retail/goods-mgr/product',
     name: 'goods-list',
-    component: Goods,
+    redirect: '/retail/goods-mgr/product/list',
+    component: () => import('@/views/goods/index.vue'),
+    children: [
+      //三级路由 商品列表
+      {
+        path: '/retail/goods-mgr/product/list',
+        name: 'goods-list',
+        component: () => import('@/views/goods/goods-list/goods-list.vue'),
+      },
+      //三级路由 组合商品列表
+      {
+        path: '/retail/goods-mgr/goods-combined',
+        name: 'goods-combined',
+        component: () => import('@/views/goods/combined-goods/goods-list.vue'),
+      },
+    ],
   },
-  {
-    path: '/retail/goods-mgr/goods-combined',
-    name: 'goods-combined',
-    component: () => import('@/views/combined-goods/goods-list.vue'),
-  },
-  // {
-  //   path: '/sider',
-  //   name: 'sider',
-  //   component: () => import(/* webpackChunkName: "About" */ '../components/sider.vue'),
-  // },
 ];
 
 const router = createRouter({
