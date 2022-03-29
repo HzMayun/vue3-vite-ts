@@ -36,17 +36,16 @@
           </el-col>
         </el-row>
         <div class="content">
-          <el-tabs class="viewsActiveName" v-model="viewsActiveName">
+          <el-tabs class="viewsActiveName" v-model="viewsActiveName" @tab-click="handleLastClick">
             <el-tab-pane
               v-for="viewTable in viewTableList"
               :key="viewTable.id"
               :label="viewTable.name"
-              :name="viewTable.url"
+              :name="baseUrl + viewTable.url"
             >
             </el-tab-pane>
+            <router-view />
           </el-tabs>
-
-          <router-view />
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -127,8 +126,12 @@ export default {
     goGoods(url: string) {
       this.$router.push(url);
     },
-    //登录按钮
+
     handleClick(tab: any) {
+      console.log(tab.props.name);
+      this.$router.push(tab.props.name);
+    },
+    handleLastClick(tab: any) {
       console.log(tab.props.name);
       this.$router.push(tab.props.name);
     },

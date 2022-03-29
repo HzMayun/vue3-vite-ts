@@ -1,38 +1,51 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-
+import Aaa from '@/views/aaa.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
     redirect: '/wkb.html',
-    component: () => import('@/views/goods/index.vue'),
+    component: Aaa,
   },
   {
     path: '/wkb.html',
     name: 'wkb',
-    redirect: '/wkb.html/retail/goods-mgr/product',
-    component: () => import('@/views/goods/index.vue'),
+    redirect: '/wkb.html/retail/goods-mgr',
+    component: Aaa,
     children: [
       {
         //二级路由：商品管理
-        path: '/wkb.html/retail/goods-mgr/product',
+        path: '/wkb.html/retail/goods-mgr',
         name: 'goods',
-        redirect: '/wkb.html/retail/goods-mgr/product/list',
-        component: () => import('@/views/goods/index.vue'),
+        redirect: '/wkb.html/retail/goods-mgr/product',
+        component: Aaa,
         children: [
           //三级路由 商品列表
           {
-            path: '/wkb.html/retail/goods-mgr/product/list',
-            name: 'goods-list',
-            component: () => import('@/views/goods/goods-list/goods-list.vue'),
-          },
-          //三级路由 组合商品商品列表
-          {
-            path: '/wkb.html/retail/goods-mgr/goods-combined',
-            name: 'goods-combined',
-            component: () => import('@/views/goods/combined-goods/goods-list.vue'),
+            path: '/wkb.html/retail/goods-mgr/product',
+            name: 'goods-mgr',
+            redirect: '/wkb.html/retail/goods-mgr/product/list',
+            component: Aaa,
+            children: [
+              {
+                path: '/wkb.html/retail/goods-mgr/product/list',
+                name: 'goods-list',
+                component: () => import('@/views/goods/goods-list/goods-list.vue'),
+              },
+              {
+                path: '/wkb.html/retail/goods-mgr/product/discard',
+                name: 'discard-list',
+                component: () => import('@/views/goods/goods-list/discard.vue'),
+              },
+            ],
           },
         ],
+      },
+      //三级路由 组合商品商品列表
+      {
+        path: '/wkb.html/retail/goods-mgr/goods-combined',
+        name: 'goods-combined',
+        component: () => import('@/views/goods/combined-goods/goods-list.vue'),
       },
     ],
   },
