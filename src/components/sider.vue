@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tabs v-model="defaultActiveMenu" class="demo-tabs" @tab-click="handleClick">
+    <el-tabs v-model="baseUrl" class="demo-tabs" @tab-click="handleClick">
       <el-tab-pane v-for="item in menuList" :key="item.id" :label="item.name" :name="item.url">
         <el-row class="menu-cent">
           <el-col :span="4">
@@ -26,8 +26,8 @@
                   <el-menu-item
                     v-for="childSecd in child.childMenu"
                     :key="childSecd.id"
-                    :index="String(childSecd.url)"
-                    @click="handleMenuTtem(childSecd)"
+                    :index="String(item.url + childSecd.url)"
+                    @click="handleMenuTtem(childSecd, item.url + childSecd.url)"
                     >{{ childSecd.name }}</el-menu-item
                   >
                 </el-menu-item-group>
@@ -58,10 +58,12 @@ import api from '@/api/index';
 import type { TabsPaneContext } from 'element-plus';
 import { Location, Document, Menu as IconMenu, Setting } from '@element-plus/icons-vue';
 import { useUserStore } from '@/store/routerMenu';
+import { getRouteLeafs } from '@/utils/routeHandle';
+
 export default {
   data() {
     return {
-      defaultActiveMenu: '/wkb.html',
+      baseUrl: '/wkb.html',
       menuList: [],
       viewTableList: [], //页面菜单的切换  最后一级
       viewsActiveName: '',
@@ -70,33 +72,22 @@ export default {
   components: { Location, Document, IconMenu, Setting },
   computed: {
     userStore() {
-      return useUserStore().name;
+      const userStore = useUserStore();
+      return userStore.routerMenu;
     },
+
     path() {
-      // let router = this.$router.currentRoute.value;
-      let path = this.$route.path;
-      // console.log(this.$router.currentRoute.value);
-      // if (router.matched && router.matched.length) {
-      //   if (!!router.matched[0] && !!router.matched[0].path) {
-      //     path = router.matched[0].path;
-      //   } else if (!!router.matched[1] && !!router.matched[1].path) {
-      //     path = router.matched[1].path;
-      //   }
-      // }
-
-      // let router = this.$router.currentRoute.value;
-
-      // const list = router.matched;
-
-      // for (let i = list.length - 1; i >= 0; i--) {
-      //   if (this.routeLeafs && this.routeLeafs.has(list[i].path)) {
-      //     return list[i].path;
-      //   }
-      // }
-
-      // return list[0].path;
-
-      return path;
+      let router = this.$router.currentRoute.value;
+      const list = router.matched;
+      console.log(list);
+      const routeLeafs = useUserStore().routerMenu;
+      for (let i = list.length - 1; i >= 0; i--) {
+        if (routeLeafs && routeLeafs.has(list[i].path)) {
+          return list[i].path;
+        }
+      }
+      // return '/';
+      return list[0].path;
     },
   },
   created() {
@@ -110,6 +101,14 @@ export default {
       api.reqGetMenu(params).then((res: any) => {
         console.log(res);
         this.menuList = res.data;
+        const userStore = useUserStore();
+        //取一级菜单 做定位
+        let router = this.$router.currentRoute.value;
+        const list = router.matched;
+        this.baseUrl = list[0].path;
+        // console.log(list, this.baseUrl);
+        //提取出二级路由，写进pinia
+        userStore.updateName(getRouteLeafs(this.menuList));
       });
     });
     //取角色信息
@@ -119,17 +118,19 @@ export default {
   },
   methods: {
     //选中菜单
-    handleMenuTtem(childSecd: any) {
+    handleMenuTtem(childSecd: any, index: string) {
       console.log(childSecd.url);
+      console.log('index====>', index);
       this.viewTableList = childSecd.childMenu;
-      this.$router.push(childSecd.url);
+      this.$router.push(index);
     },
     goGoods(url: string) {
       this.$router.push(url);
     },
     //登录按钮
-    handleClick(tab: TabsPaneContext, event: Event) {
-      console.log(tab, event);
+    handleClick(tab: any) {
+      console.log(tab.props.name);
+      this.$router.push(tab.props.name);
     },
     handleOpen(tab: TabsPaneContext, event: Event) {
       console.log(tab, event);

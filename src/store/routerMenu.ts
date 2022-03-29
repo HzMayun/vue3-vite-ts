@@ -4,7 +4,17 @@ export const useUserStore = defineStore({
   id: 'routerMenu', // id必填，且需要唯一
   state: () => {
     return {
-      name: '张三',
+      routerMenu: new Map(),
+      baseUrl: '/wkb.html', //初始值
     };
+  },
+  actions: {
+    updateName(name: any) {
+      this.routerMenu = name;
+    },
+    //内容区域tab
+    updateBaseUrl(baseUrl: any) {
+      this.baseUrl = baseUrl;
+    },
   },
 });
